@@ -1,136 +1,237 @@
-# ConfliBERT Fine-Tuning and Experimentation Framework
+# ConfliBERT: A Pre-trained Language Model for Political Conflict and Violence (NAACL 2022)
 
-This repository provides a complete, containerized environment for fine-tuning Transformer models (such as ConfliBERT, BERT, etc.) on various text classification and Named Entity Recognition (NER) tasks. The entire workflow is managed with Docker, ensuring a reproducible and easy-to-use setup across different machines (Mac, Windows, or Linux).
+This repository contains the essential code for the paper [ConfliBERT: A Pre-trained Language Model for Political Conflict and
+Violence (NAACL 2022)](https://aclanthology.org/2022.naacl-main.400/).
+
+# ConfliBERT Setup Guide
+
+## Choose Your Path
+Not sure where to start and why a research scholar would use ConfliBERT? Check our [Installation Decision Workflow](#installation-decision-workflow) to find the best path for your experience level and needs.
+
+
+#### 🆕 New to Python?
+We offer multiple ways to get started with ConfliBERT:
+
+1. **Browser-Based Options**
+  - [![Google Colab Demo](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1RPyrX0c8FeZbvx_Ad8QI_2GMYbAr3fd_?usp=sharing) - Try ConfliBERT directly in your browser with no installation required
+  - [Cloud GUI](https://eventdata.utdallas.edu/conflibert-gui/) - Access through our hosted web interface
+  - [![Downstream Tasks Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1YW3X7pS1Fdq_N9bnLdwCbu3P6WQwSPbl?usp=sharing) - Explore downstream tasks interactively with ConfliBERT
+
+2. **Local GUI Installation**
+  Run ConfliBERT's interface on your own machine for enhanced privacy and speed:
+Clone the repository to a local directory (do not clone to cloud storage, venv installs will be very slow if you do): 
+```bash
+git clone https://github.com/shreyasmeher/conflibert-gui.git
+cd conflibert-gui
+```
+Create and activate a virtual environment:
+```bash
+python -m venv env
+source env/bin/activate  # On Windows, use: env\Scripts\activate
+```
+Install required packages:
+```bash
+pip install -r requirements.txt
+```
+Start the application:
+```bash
+python app.py
+```
+The app will provide two URLs in the terminal:
+- A local URL (e.g., http://127.0.0.1:7860 or http://localhost:7860)
+- A public URL (to access from other devices)
+
+Open either URL in your web browser to use the interface.
+
+### 💻 Experienced with Python?
+If you're comfortable with Python and want to set up ConfliBERT locally, continue with the installation guide below.
+
+## Additional Resources
+- [Original Paper](https://aclanthology.org/2022.naacl-main.400/)
+- [Hugging Face Documentation](https://huggingface.co/snowood1/ConfliBERT-scr-uncased)
+- [EventData Hugging Face (finetuned models)](https://huggingface.co/eventdata-utd)
+- [ConfliBERT Documentation (Work in Progress!)](https://github.com/eventdata/ConfliBERT-Manual)
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
+ConfliBERT requires Python 3 and CUDA (for GPU accel). You can install the dependencies using either conda (recommended) or pip.
 
-1.  **Git:** To clone the repository.
-2.  **Docker Desktop:** To build and run the containerized application. Download it from the [official Docker website](https://www.docker.com/products/docker-desktop/).
-    * **For GPU support on Windows/Linux:** You must also have the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed.
-
-## Project Setup
-
-1.  **Clone the Repository**
-    ```bash
-    git clone <your-repository-url>
-    cd ConfliBERT
-    ```
-
-2.  **Prepare Data and Configurations**
-    This project is structured to read from `/data` and `/configs` directories.
-    * **`/data`:** Place your dataset folders inside this directory (e.g., `/data/insightCrime/`). This directory is intentionally not tracked by Git.
-    * **`/configs`:** Place your corresponding `.json` configuration files here.
-
-## Docker-Based Workflow
-
-This project uses a universal `Dockerfile` that can build an image for either CPU-only or GPU-accelerated environments.
-
-### 1. Build the Docker Image
-
-You only need to build the image once. Choose the command that matches your hardware.
-
-**A) For Mac or PC without an NVIDIA GPU (CPU Version)**
-Run this command from the `ConfliBERT` directory:
+### Option 1: Using Conda (Recommended)
 ```bash
-docker build --build-arg DEVICE=cpu -t confli-bert-runner:cpu .
+# Create and activate a new conda environment
+conda create -n conflibert python=3.10  # Using a newer Python version for better compatibility
+conda activate conflibert
+
+# Install core packages
+conda install pytorch -c pytorch  # Latest stable version
+conda install numpy scikit-learn pandas -c conda-forge  # Latest compatible versions
+
+# Install transformer libraries
+pip install transformers  # Latest stable version
+pip install simpletransformers
+
+# Optional: If you need CUDA support for GPU
+# conda install cudatoolkit -c pytorch
 ```
 
-**B) For PC with an NVIDIA GPU (GPU Version)**
-Run this command from the `ConfliBERT` directory:
-
+### Option 2: Using Pip Only
 ```bash
-docker build --build-arg DEVICE=gpu -t confli-bert-runner:gpu .
+# Create and activate a virtual environment (optional but recommended)
+python3 -m venv conflibert-env
+source conflibert-env/bin/activate  # On Windows use: conflibert-env\Scripts\activate
+
+# Install core packages
+pip install torch  # Latest stable version
+pip install numpy scikit-learn pandas  # Latest compatible versions
+
+# Install transformer libraries 
+pip install transformers
+pip install simpletransformers
+
+# Optional: If you need GPU support, install CUDA toolkit
+# Download from: https://developer.nvidia.com/cuda-downloads
 ```
 
-### 2. Run an Experiment
+### Verify Installation
+After installation, verify your setup:
+```python
+import torch
+import transformers
+import numpy
+import sklearn
+import pandas
+from simpletransformers.model import TransformerModel
 
-Once the image is built, you can run any experiment. The command will mount your local `data`, `configs`, `outputs`, and `logs` directories into the container.
-
-**A) To Run on CPU (Mac or PC without GPU)**
-Use the `confli-bert-runner:cpu` image.
-
-```bash
-# On Mac or Linux
-docker run --rm -it \
-  -v "$(pwd)/data:/app/data" \
-  -v "$(pwd)/configs:/app/configs" \
-  -v "$(pwd)/../outputs:/app/outputs" \
-  -v "$(pwd)/../logs:/app/logs" \
-  confli-bert-runner:cpu \
-  python3 finetune_data_cpu.py --dataset <your-dataset-name>
-
-# On Windows (PowerShell)
-docker run --rm -it \
-  -v "${PWD}/data:/app/data" \
-  -v "${PWD}/configs:/app/configs" \
-  -v "${PWD}/../outputs:/app/outputs" \
-  -v "${PWD}/../logs:/app/logs" \
-  confli-bert-runner:cpu \
-  python3 finetune_data_cpu.py --dataset <your-dataset-name>
+# Check CUDA availability
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"PyTorch version: {torch.__version__}")
+print(f"Transformers version: {transformers.__version__}")
 ```
 
-**B) To Run on GPU (PC with NVIDIA GPU)**
-Use the `confli-bert-runner:gpu` image and the `--gpus all` flag.
+### Common Issues
+- If you encounter CUDA errors, ensure your NVIDIA drivers are properly installed: `nvidia-smi`
+- For pip-only installation, you might need to install CUDA toolkit separately
+- If you face dependency conflicts, try installing packages one at a time
 
-```bash
-# On Linux or Windows (with NVIDIA Container Toolkit)
-docker run --gpus all --rm -it \
-  -v "$(pwd)/data:/app/data" \
-  -v "$(pwd)/configs:/app/configs" \
-  -v "$(pwd)/../outputs:/app/outputs" \
-  -v "$(pwd)/../logs:/app/logs" \
-  confli-bert-runner:gpu \
-  python3 finetune_data.py --dataset <your-dataset-name>
+## ConfliBERT Checkpoints
+We provided four versions of ConfliBERT:
+<ol>
+  <li>ConfliBERT-scr-uncased: &nbsp;&nbsp;&nbsp;&nbsp; Pretraining from scratch with our own uncased vocabulary (preferred)</li>
+  <li>ConfliBERT-scr-cased: &nbsp;&nbsp;&nbsp;&nbsp; Pretraining from scratch with our own cased vocabulary</li>
+  <li>ConfliBERT-cont-uncased: &nbsp;&nbsp;&nbsp;&nbsp; Continual pretraining with original BERT's uncased vocabulary</li>
+  <li>ConfliBERT-cont-cased: &nbsp;&nbsp;&nbsp;&nbsp; Continual pretraining with original BERT's cased vocabulary</li>
+</ol>
+
+
+You can import the above four models directly via Huggingface API:
+
+	from transformers import AutoTokenizer, AutoModelForMaskedLM
+	tokenizer = AutoTokenizer.from_pretrained("snowood1/ConfliBERT-scr-uncased", use_auth_token=True)
+	model = AutoModelForMaskedLM.from_pretrained("snowood1/ConfliBERT-scr-uncased", use_auth_token=True)
+
+
+## Evaluation	
+The usage of ConfliBERT is the same as other BERT models in Huggingface.
+
+We provided multiple examples using [Simple Transformers](https://simpletransformers.ai/). You can run:
+	
+	CUDA_VISIBLE_DEVICES=0 python finetune_data.py --dataset IndiaPoliceEvents_sents --report_per_epoch
+
+Click the Colab demo to see an example of evaluation: [![Google Colab Demo](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1d4557lxoDWKTx0FWcmSPlLx9UEn2BdcA?usp=sharing)
+
+
+## Evaluation Datasets	
+Below is the summary of the publicly available datasets:
+
+| Dataset                 | Links                                                                        |
+|-------------------------|------------------------------------------------------------------------------|
+| 20Newsgroups            | https://www.kaggle.com/crawford/20-newsgroups                                |
+| BBCnews                 | https://www.kaggle.com/c/learn-ai-bbc/overview                               |
+| EventStatusCorpus       | https://catalog.ldc.upenn.edu/LDC2017T09                                     |
+| GlobalContention        | https://github.com/emerging-welfare/glocongold/tree/master/sample            |
+| GlobalTerrorismDatabase | https://www.start.umd.edu/gtd/                                               |
+| Gun Violence Database   | http://gun-violence.org/download/                                            |
+| IndiaPoliceEvents       | https://github.com/slanglab/IndiaPoliceEvents                                |
+| InsightCrime            | https://figshare.com/s/73f02ab8423bb83048aa                                  |
+| MUC-4                   | https://github.com/xinyadu/grit_doc_event_entity/tree/master/data/muc        |
+| re3d                    | https://github.com/juand-r/entity-recognition-datasets/tree/master/data/re3d |
+| SATP                    | https://github.com/javierosorio/SATP                                         |
+| CAMEO                   | https://dl.acm.org/doi/abs/10.1145/3514094.3534178                           |	
+
+
+To use your own datasets, the 1st step is to preprocess the datasets into the required formats in [./data](https://github.com/eventdata/ConfliBERT/tree/main/data). For example,
+
+<ol>
+  <li>IndiaPoliceEvents_sents for classfication tasks. The format is sentence + labels separated by tabs.</li>
+  <li>re3d for NER tasks in CONLL format</li>
+</ol>
+
+The 2nd step is to create the corresponding config files in [./configs](https://github.com/eventdata/ConfliBERT/tree/main/configs) with the correct tasks from ["binary", "multiclass", "multilabel", "ner"].
+
+	
+## Pretraining Corpus
+We have gathered a large corpus in politics and conflicts domain (33 GB) for pretraining ConfliBERT.
+The folder [./pretrain-corpora/Crawlers and Processes](https://github.com/eventdata/ConfliBERT/tree/main/pretrain-corpora/Crawlers%20and%20Process) contains the sample scripts used to generate the corpus used in this study. 
+Due to the copyright, we provide a few samples in [./pretrain-corpora/Samples](https://github.com/eventdata/ConfliBERT/tree/main/pretrain-corpora/Samples).  These samples follow the format of "one sentence per line format". See more details of pretraining corpora in our paper's Section 2 and Appendix.
+
+
+
+
+## Pretraining Scripts
+We followed the same pretraining scripts run_mlm.py from Huggingface [(The original link)](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_mlm.py).
+Below is an example using 8 GPUs. We have provided our parameters in the Appendix. However, you should change the parameters according to your own devices:
+	
+```	
+	export NGPU=8; nohup python -m torch.distributed.launch --master_port 12345 \
+	--nproc_per_node=$NGPU run_mlm.py \
+	--model_type bert \
+	--config_name ./bert_base_cased \
+	--tokenizer_name ./bert_base_cased \
+	--output_dir ./bert_base_cased \
+	--cache_dir ./cache_cased_128 \
+	--use_fast_tokenizer \
+	--overwrite_output_dir \
+	--train_file YOUR_TRAIN_FILE \
+	--validation_file YOUR_VALID_FILE \
+	--max_seq_length 128\ 
+	--preprocessing_num_workers 4 \
+	--dataloader_num_workers 2 \
+	--do_train --do_eval \
+	--learning_rate 5e-4 \
+	--warmup_steps=10000 \
+	--save_steps 1000 \
+	--evaluation_strategy steps \
+	--eval_steps 10000 \
+	--prediction_loss_only  \
+	--save_total_limit 3 \
+	--per_device_train_batch_size 64 --per_device_eval_batch_size 64 \
+	--gradient_accumulation_steps 4 \
+	--logging_steps=100 \
+	--max_steps 100000 \
+	--adam_beta1 0.9 --adam_beta2 0.98 --adam_epsilon 1e-6 \
+	--fp16 True --weight_decay=0.01
 ```
 
-*Note: The GPU version runs the original `finetune_data.py` script, while the CPU command runs the optimized `finetune_data_cpu.py`.*
-
-### How It Works
-
-  * **`Dockerfile`:** Contains all instructions to build a consistent Python environment with all libraries. It can build a CPU or GPU version based on a build argument.
-  * **`finetune_data_cpu.py`:** The main script for running experiments, specifically optimized for CPU execution.
-  * **`/configs`:** This directory holds `.json` files that define the parameters for each experiment, including the model to use, batch size, epochs, etc.
-  * **`/data`:** This directory holds the training, validation, and test datasets.
-  * **`/outputs` & `/logs`:** These directories are created outside the main project folder to store the results, saved models, and log files from your experiments.
-
-After an experiment completes, your results will be available in the `outputs` and `logs` directories on your local machine.
-
----
-
-## .gitignore
-
-Create a file named `.gitignore` inside your `ConfliBERT` directory with the following content:
-
-```
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# Data, logs, and outputs - These should not be in the repository
-/data/
-/outputs/
-/logs/
-
-# OS-specific files
-.DS_Store
-Thumbs.db
-```
-
-*Note: `/data/` is ignored because datasets can be huge. Your README will instruct users to add their own data.*
-
----
 
 ## Citation
-If you use this code, please cite the original ConfliBERT paper and repository.
 
----
-For questions or issues, please open an issue in this repository.
+If you find this repo useful in your research, please consider citing:
 
----
-Good evening from Rotterdam!
+	@inproceedings{hu2022conflibert,
+	  title={ConfliBERT: A Pre-trained Language Model for Political Conflict and Violence},
+	  author={Hu, Yibo and Hosseini, MohammadSaleh and Parolin, Erick Skorupa and Osorio, Javier and Khan, Latifur and Brandt, Patrick and D’Orazio, Vito},
+	  booktitle={Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+	  pages={5469--5482},
+	  year={2022}
+	}
 
-That is fantastic news! I'm thrilled that everything is working. Getting from a set of scripts to a fully containerized, debugged, and running machine learning workflow is a huge accomplishment. Congratulations!
+
+## ConfliBERT Workflows
+
+### Technical Installation Path
+<img src="/readme-docs/workflow.png" alt="ConfliBERT Installation Decision Workflow" width="70%">
+
+### Research Usage Path
+<img src="/readme-docs/conflibert-tasks.png" alt="ConfliBERT Research Tasks Workflow" width="80%">
+
+These workflows help you navigate both technical setup and research planning with ConfliBERT.
