@@ -1,0 +1,7 @@
+# For GPU environment (torch is installed separately in Dockerfile)
+simpletransformers
+pandas
+scikit-learn
+seqeval
+datasets
+transformers==4.36.2

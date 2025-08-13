@@ -1,0 +1,10 @@
+# For all platforms
+simpletransformers
+pandas
+scikit-learn
+seqeval
+datasets
+torch
+torchvision
+torchaudio
+transformers==4.36.2
