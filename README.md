@@ -17,6 +17,19 @@ cd ConfliBERT-docker
 
 ---
 
+## Directory Structure
+
+- `data/` — Place your datasets here. Each dataset should be in its own subfolder (e.g., `data/insightCrime/`).
+- `configs/` — Place your experiment configuration JSON files here.
+- `outputs/` — Model checkpoints and results will be saved here (created automatically).
+- `logs/` — Training and evaluation logs will be saved here (created automatically).
+- `Dockerfile` — The container build instructions for CPU/GPU environments.
+- `finetune_data_cpu.py` — Main script for CPU-only fine-tuning.
+- `finetune_data.py` — Main script for GPU fine-tuning.
+- `requirements-cpu.txt` / `requirements-gpu.txt` — Python dependencies for each environment.
+
+---
+
 ## Docker Build Instructions
 
 ### 1. Build the Docker Image
@@ -83,6 +96,37 @@ docker run --gpus all --rm -it \
 - Outputs and logs will be saved in `outputs/` and `logs/`.
 - No ENTRYPOINT is set; you can run any script inside the container.
 - **Resource Allocation:** For best performance, you may need to increase the number of CPUs and memory allocated to Docker Desktop. Go to Docker Desktop > Settings > Resources and adjust the sliders as needed, especially for large models or datasets.
+
+---
+
+## Troubleshooting
+
+- **Volume Mounting Issues (Windows):**
+  - Use PowerShell and ensure paths are correct. Try using absolute paths if you encounter errors.
+- **Memory/CPU Errors:**
+  - Increase resource allocation in Docker Desktop (see Notes above).
+- **File Permissions:**
+  - If you see permission errors, try running Docker with elevated privileges or check your folder permissions.
+- **Container Fails to Start:**
+  - Check your Docker build logs for missing dependencies or typos in the Dockerfile.
+- **Output/Logs Not Appearing:**
+  - Ensure the output and log directories exist and are correctly mounted.
+
+---
+
+## FAQ
+
+**Q: Can I use my own dataset?**
+A: Yes! Place your dataset in a new subfolder under `data/` and update your config file in `configs/` to point to it.
+
+**Q: How do I change the model or experiment parameters?**
+A: Edit the relevant JSON config file in `configs/` to set model architecture, batch size, epochs, etc.
+
+**Q: Can I run other scripts inside the container?**
+A: Yes, you can run any Python script included in the repo by specifying it in the `docker run` command.
+
+**Q: What if I run out of memory or get killed containers?**
+A: Increase Docker Desktop's resource allocation and/or reduce batch size in your config.
 
 ---
 
