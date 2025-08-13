@@ -2,6 +2,15 @@
 
 This repository provides a Dockerized environment for fine-tuning the ConfliBERT model for text classification and NER tasks. (Note: This setup is specifically for ConfliBERT, not for other BERT models.)
 
+## Project Overview
+ConfliBERT is a transformer-based model designed for event extraction, text classification, and named entity recognition (NER) in conflict and security-related datasets. This repository provides a reproducible, containerized workflow for training and evaluating ConfliBERT on your own data.
+
+Supported tasks:
+- Multi-label text classification
+- Multi-class text classification
+- Binary classification
+- Named Entity Recognition (NER)
+
 ## Getting Started
 
 ### 1. Clone the Repository
@@ -27,6 +36,31 @@ cd ConfliBERT-docker
 - `finetune_data_cpu.py` — Main script for CPU-only fine-tuning.
 - `finetune_data.py` — Main script for GPU fine-tuning.
 - `requirements-cpu.txt` / `requirements-gpu.txt` — Python dependencies for each environment.
+
+---
+
+## Example Configuration File
+
+A typical config file (`configs/insightCrime.json`) might look like:
+```json
+{
+  "task": "multilabel",
+  "models": [
+    {
+      "architecture": "bert",
+      "model_name": "ConfliBERT",
+      "model_path": "eventdata/ConfliBERT-base-uncased"
+    }
+  ],
+  "train_batch_size": 8,
+  "epochs_per_seed": 3,
+  "initial_seed": 42,
+  "num_of_seeds": 1
+}
+```
+- `task`: One of `multilabel`, `multiclass`, `binary`, or `ner`.
+- `models`: List of model configs (architecture, name, path).
+- `train_batch_size`, `epochs_per_seed`, etc.: Training parameters.
 
 ---
 
@@ -72,6 +106,26 @@ docker run --gpus all --rm -it \
 
 ---
 
+## Advanced Usage
+
+- **Run a different script:**
+  ```bash
+  docker run --rm -it confli-bert-runner:cpu python3 run_mlm.py --your-args
+  ```
+- **Override config at runtime:**
+  ```bash
+  docker run --rm -it confli-bert-runner:cpu python3 finetune_data_cpu.py --dataset insightCrime --train_batch_size 4
+  ```
+- **Mount additional volumes:**
+  Add more `-v` flags to share other folders with the container.
+- **Debugging:**
+  Add `-it` for interactive mode and use `bash` to open a shell in the container.
+  ```bash
+  docker run --rm -it confli-bert-runner:cpu bash
+  ```
+
+---
+
 ## Pushing Docker Images to Docker Hub
 
 1. **Login to Docker Hub:**
@@ -111,6 +165,10 @@ docker run --gpus all --rm -it \
   - Check your Docker build logs for missing dependencies or typos in the Dockerfile.
 - **Output/Logs Not Appearing:**
   - Ensure the output and log directories exist and are correctly mounted.
+- **Python Package Issues:**
+  - If you see import errors, rebuild the Docker image to ensure all dependencies are installed.
+- **GPU Not Detected:**
+  - Make sure you have the NVIDIA Container Toolkit installed and use the `--gpus all` flag.
 
 ---
 
@@ -127,6 +185,31 @@ A: Yes, you can run any Python script included in the repo by specifying it in t
 
 **Q: What if I run out of memory or get killed containers?**
 A: Increase Docker Desktop's resource allocation and/or reduce batch size in your config.
+
+**Q: How do I check logs and outputs?**
+A: All logs and outputs are saved in the `logs/` and `outputs/` directories, which are mounted to your local machine.
+
+**Q: Can I use this setup for other BERT models?**
+A: No, this setup is specifically for ConfliBERT. For other models, you may need to modify the code and Dockerfile.
+
+---
+
+## Citation
+If you use this code, please cite the original ConfliBERT paper and repository:
+
+```
+@inproceedings{confli-bert,
+  title={ConfliBERT: A Transformer-Based Model for Event Extraction in Armed Conflict Domains},
+  author={...},
+  booktitle={...},
+  year={...}
+}
+```
+
+---
+
+## License
+This project is released under the MIT License. See the `LICENSE` file for details.
 
 ---
 
