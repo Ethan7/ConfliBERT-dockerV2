@@ -1,6 +1,6 @@
 # ConfliBERT Docker Setup
 
-This repository provides a Dockerized environment for fine-tuning Transformer models (ConfliBERT, BERT, etc.) for text classification and NER tasks.
+This repository provides a Dockerized environment for fine-tuning the ConfliBERT model for text classification and NER tasks. (Note: This setup is specifically for ConfliBERT, not for other BERT models.)
 
 ## Getting Started
 
