@@ -2,6 +2,11 @@
 
 This repository provides a Dockerized environment for fine-tuning the ConfliBERT model for text classification and NER tasks. (Note: This setup is specifically for ConfliBERT, not for other BERT models.)
 
+## Prerequisites
+- **Docker Desktop**: Required for building and running containers. Download from [Docker's official site](https://www.docker.com/products/docker-desktop/).
+- **Sufficient resources**: For large models/datasets, increase CPU and memory allocation in Docker Desktop (see Notes below).
+- **(Optional) NVIDIA GPU**: For GPU acceleration, install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+
 ## Project Overview
 ConfliBERT is a transformer-based model designed for event extraction, text classification, and named entity recognition (NER) in conflict and security-related datasets. This repository provides a reproducible, containerized workflow for training and evaluating ConfliBERT on your own data.
 
