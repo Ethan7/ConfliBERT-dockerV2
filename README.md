@@ -194,23 +194,4 @@ A: No, this setup is specifically for ConfliBERT. For other models, you may need
 
 ---
 
-## Citation
-If you use this code, please cite the original ConfliBERT paper and repository:
-
-```
-@inproceedings{confli-bert,
-  title={ConfliBERT: A Transformer-Based Model for Event Extraction in Armed Conflict Domains},
-  author={...},
-  booktitle={...},
-  year={...}
-}
-```
-
----
-
-## License
-This project is released under the MIT License. See the `LICENSE` file for details.
-
----
-
 For troubleshooting or advanced usage, see the Dockerfile and scripts in this repository.
