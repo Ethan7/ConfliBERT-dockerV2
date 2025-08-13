@@ -1,6 +1,21 @@
 # ConfliBERT Docker Setup
 
-This repository provides a Dockerized environment for fine-tuning ConfliBERT.
+This repository provides a Dockerized environment for fine-tuning Transformer models (ConfliBERT, BERT, etc.) for text classification and NER tasks.
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/shreyasmeher/ConfliBERT-docker.git
+cd ConfliBERT-docker
+```
+
+### 2. Prepare Your Data and Configs
+- Place your datasets in the `data/` directory.
+- Place your configuration files in the `configs/` directory.
+
+---
 
 ## Docker Build Instructions
 
