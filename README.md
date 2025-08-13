@@ -82,6 +82,7 @@ docker run --gpus all --rm -it \
 - Place your datasets in the `data/` directory and configs in `configs/`.
 - Outputs and logs will be saved in `outputs/` and `logs/`.
 - No ENTRYPOINT is set; you can run any script inside the container.
+- **Resource Allocation:** For best performance, you may need to increase the number of CPUs and memory allocated to Docker Desktop. Go to Docker Desktop > Settings > Resources and adjust the sliders as needed, especially for large models or datasets.
 
 ---
 
