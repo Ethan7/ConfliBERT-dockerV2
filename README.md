@@ -25,7 +25,7 @@ git clone https://github.com/shreyasmeher/ConfliBERT-docker.git
 cd ConfliBERT-docker
 ```
 
-### 2. Prepare Your Data and Configs
+### Prepare Your Data and Configs
 - Place your datasets in the `data/` directory.
 - Place your configuration files in the `configs/` directory.
 
@@ -71,7 +71,7 @@ A typical config file (`configs/insightCrime.json`) might look like:
 
 ## Docker Build Instructions
 
-### 1. Build the Docker Image
+### Build the Docker Image
 
 **For CPU-only (Mac/PC without NVIDIA GPU):**
 ```bash
