@@ -4,6 +4,7 @@ This repository provides a Dockerized environment for fine-tuning the ConfliBERT
 
 ## Prerequisites
 - **Docker Desktop**: Required for building and running containers. Download from [Docker's official site](https://www.docker.com/products/docker-desktop/).
+- **Git (specifically Git, not Github Desktop)**: You can download from their website: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git 
 - **Sufficient resources**: For large models/datasets, increase CPU and memory allocation in Docker Desktop (see Notes below).
 - **(Optional) NVIDIA GPU**: For GPU acceleration, install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
 
