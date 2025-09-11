@@ -202,3 +202,5 @@ A: No, this setup is specifically for ConfliBERT. For other models, you may need
 ---
 
 For troubleshooting or advanced usage, see the Dockerfile and scripts in this repository.
+
+To learn how to build a Docker Container, visit this GitHub page: https://github.com/AshtonElliott/ConfliBERT-DockerContainerization
