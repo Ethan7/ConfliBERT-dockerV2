@@ -40,6 +40,7 @@ cd ConfliBERT-docker
 - `logs/` — Training and evaluation logs will be saved here (created automatically).
 - `Dockerfile` — The container build instructions for CPU/GPU environments.
 - `finetune_data_cpu.py` — Main script for CPU-only fine-tuning.
+- `finetune_data_cpu_low.py` - Main script for laptop-based CPU-only fine-tuning
 - `finetune_data.py` — Main script for GPU fine-tuning.
 - `requirements-cpu.txt` / `requirements-gpu.txt` — Python dependencies for each environment.
 
