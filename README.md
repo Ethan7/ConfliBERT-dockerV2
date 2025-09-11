@@ -100,6 +100,17 @@ docker run --rm -it \
   python3 finetune_data_cpu.py --dataset <your-dataset-name>
 ```
 
+**Run on Low/Laptop CPU:**
+```bash
+docker run --rm -it \
+  -v "$(pwd)/data:/app/data" \
+  -v "$(pwd)/configs:/app/configs" \
+  -v "$(pwd)/../outputs:/app/outputs" \
+  -v "$(pwd)/../logs:/app/logs" \
+  confli-bert-runner:cpu \
+  python3 finetune_data_cpu_low.py --dataset <your-dataset-name>
+```
+
 **Run on GPU:**
 ```bash
 docker run --gpus all --rm -it \
