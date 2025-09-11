@@ -22,7 +22,7 @@ Supported tasks:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/shreyasmeher/ConfliBERT-docker.git
+git clone https://github.com/AshtonElliott/ConfliBERT-dockerV2.git
 cd ConfliBERT-docker
 ```
 
