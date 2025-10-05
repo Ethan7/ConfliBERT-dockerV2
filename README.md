@@ -23,7 +23,7 @@ Supported tasks:
 
 ```bash
 git clone https://github.com/AshtonElliott/ConfliBERT-dockerV2.git
-cd ConfliBERT-docker
+cd ConfliBERT-dockerV2
 ```
 
 ### Prepare Your Data and Configs
