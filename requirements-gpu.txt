@@ -4,4 +4,4 @@ pandas
 scikit-learn
 seqeval
 datasets
-transformers==4.36.2
+transformers==4.31.0
