@@ -85,7 +85,7 @@ docker build --build-arg DEVICE=cpu -t <Image Name> .
 docker build --build-arg DEVICE=gpu -t <Image Name> .
 ```
 
-Note that "<Image Name>" is whatever you wish to name the image. 
+Note that "Image Name" is whatever you wish to name the image. 
 
 ---
 
