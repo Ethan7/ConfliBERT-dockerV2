@@ -1,49 +1,31 @@
-# Use a build-time argument to select the target device. Default to 'cpu'.
-ARG DEVICE=cpu
+# Use an NVIDIA CUDA runtime image that includes the CUDA libraries
+FROM nvidia/cuda:12.6.0-runtime-ubuntu22.04
+ENV DEBIAN_FRONTEND=noninteractive
 
-# --- GPU Stage ---
-# This stage builds the GPU-enabled environment.
-FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 AS gpu-base
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.10 \
-    python3-pip \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install the specific GPU version of PyTorch first
-RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-# Copy and install the rest of the GPU requirements
-COPY requirements-gpu.txt .
-RUN pip3 install --no-cache-dir -r requirements-gpu.txt
-
-# --- CPU Stage ---
-# This stage builds the CPU-only environment for Mac/non-GPU PCs.
-FROM python:3.10-slim-bullseye AS cpu-base
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy and install the CPU requirements
-COPY requirements-cpu.txt .
-RUN pip3 install --no-cache-dir -r requirements-cpu.txt
-
-
-# --- Final Stage ---
-# Select which base to use depending on the build-time ARG
-FROM ${DEVICE}-base
-WORKDIR $APP_HOME
-
-# Copy the application code into the final image
+# Install Python 3.10 and pip
+RUN apt-get update && \
+    apt-get install -y python3.10 python3.10-dev python3-pip && \
+    ln -sf /usr/bin/python3.10 /usr/bin/python3 && \
+    ln -sf /usr/bin/pip3 /usr/bin/pip && \
+    rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 COPY . .
 
-# No ENTRYPOINT is set, to maintain flexibility for running either
-# finetune_data.py or run_mlm.py from the `docker run` command.
+#RUN pip3 install --upgrade setuptools
+#RUN pip3 install --upgrade pip
+#RUN pip3 install simpletransformers
+#RUN pip3 install transformers==4.31.0
+#RUN pip3 install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+
+RUN pip3 install --upgrade pip setuptools && \
+    pip3 install --no-cache-dir \
+        torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124 && \
+    pip3 install --no-cache-dir \
+        transformers==4.31.0 simpletransformers
+
+# Optional: Set NVIDIA-specific environment variables
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+# Set the default command (adjust as needed)
+CMD ["python3"]
