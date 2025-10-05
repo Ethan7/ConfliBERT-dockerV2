@@ -77,13 +77,15 @@ A typical config file (`configs/insightCrime.json`) might look like:
 
 **For CPU-only (Mac/PC without NVIDIA GPU):**
 ```bash
-docker build --build-arg DEVICE=cpu -t confli-bert-runner:cpu .
+docker build --build-arg DEVICE=cpu -t <Image Name> .
 ```
 
 **For GPU (PC with NVIDIA GPU):**
 ```bash
-docker build --build-arg DEVICE=gpu -t confli-bert-runner:gpu .
+docker build --build-arg DEVICE=gpu -t <Image Name> .
 ```
+
+Note that "<Image Name>" is whatever you wish to name the image. 
 
 ---
 
@@ -96,7 +98,7 @@ docker run --rm -it \
   -v "$(pwd)/configs:/app/configs" \
   -v "$(pwd)/../outputs:/app/outputs" \
   -v "$(pwd)/../logs:/app/logs" \
-  confli-bert-runner:cpu \
+  <Image Name> \
   python3 finetune_data_cpu.py --dataset <your-dataset-name>
 ```
 
@@ -107,7 +109,7 @@ docker run --rm -it \
   -v "$(pwd)/configs:/app/configs" \
   -v "$(pwd)/../outputs:/app/outputs" \
   -v "$(pwd)/../logs:/app/logs" \
-  confli-bert-runner:cpu \
+  <Image Name> \
   python3 finetune_data_cpu_low.py --dataset <your-dataset-name>
 ```
 
@@ -118,7 +120,7 @@ docker run --gpus all --rm -it \
   -v "$(pwd)/configs:/app/configs" \
   -v "$(pwd)/../outputs:/app/outputs" \
   -v "$(pwd)/../logs:/app/logs" \
-  confli-bert-runner:gpu \
+  <Image Name> \
   python3 finetune_data.py --dataset <your-dataset-name>
 ```
 
@@ -128,18 +130,18 @@ docker run --gpus all --rm -it \
 
 - **Run a different script:**
   ```bash
-  docker run --rm -it confli-bert-runner:cpu python3 run_mlm.py --your-args
+  docker run --rm -it <Image Name> python3 run_mlm.py --your-args
   ```
 - **Override config at runtime:**
   ```bash
-  docker run --rm -it confli-bert-runner:cpu python3 finetune_data_cpu.py --dataset insightCrime --train_batch_size 4
+  docker run --rm -it <Image Name> python3 finetune_data_cpu.py --dataset insightCrime --train_batch_size 4
   ```
 - **Mount additional volumes:**
   Add more `-v` flags to share other folders with the container.
 - **Debugging:**
   Add `-it` for interactive mode and use `bash` to open a shell in the container.
   ```bash
-  docker run --rm -it confli-bert-runner:cpu bash
+  docker run --rm -it <Image Name> bash
   ```
 
 ---
@@ -152,13 +154,13 @@ docker run --gpus all --rm -it \
    ```
 2. **Tag your image:**
    ```bash
-   docker tag confli-bert-runner:cpu <your-dockerhub-username>/confli-bert-runner:cpu
-   docker tag confli-bert-runner:gpu <your-dockerhub-username>/confli-bert-runner:gpu
+   docker tag confli-bert-runner:cpu <your-dockerhub-username>/<Image Name>
+   docker tag confli-bert-runner:gpu <your-dockerhub-username>/<Image Name>
    ```
 3. **Push your image:**
    ```bash
-   docker push <your-dockerhub-username>/confli-bert-runner:cpu
-   docker push <your-dockerhub-username>/confli-bert-runner:gpu
+   docker push <your-dockerhub-username>/<Image Name>
+   docker push <your-dockerhub-username>/<Image Name>
    ```
 
 ---
