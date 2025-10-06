@@ -11,12 +11,6 @@ RUN apt-get update && \
 WORKDIR /app
 COPY . .
 
-#RUN pip3 install --upgrade setuptools
-#RUN pip3 install --upgrade pip
-#RUN pip3 install simpletransformers
-#RUN pip3 install transformers==4.31.0
-#RUN pip3 install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
-
 RUN pip3 install --upgrade pip setuptools && \
     pip3 install --no-cache-dir \
         torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124 && \
@@ -28,4 +22,4 @@ ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 # Set the default command (adjust as needed)
-CMD ["python3"]
+CMD ["/bin/bash"]
