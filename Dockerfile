@@ -15,7 +15,7 @@ RUN pip3 install --upgrade pip setuptools && \
     pip3 install --no-cache-dir \
         torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124 && \
     pip3 install --no-cache-dir \
-        transformers==4.31.0 simpletransformers
+        transformers==4.30.0 simpletransformers
 
 # Optional: Set NVIDIA-specific environment variables
 ENV NVIDIA_VISIBLE_DEVICES=all
