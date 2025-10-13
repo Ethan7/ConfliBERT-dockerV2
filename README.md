@@ -148,7 +148,7 @@ docker run --gpus all --rm -it \
    ```
 2. **Tag your image:**
    ```bash
-   docker tag confli-bert-runner:gpu <your-dockerhub-username>/<Image Name>
+   docker tag <your-dockerhub-username>/<Image Name>
    ```
 3. **Push your image:**
    ```bash
