@@ -10,6 +10,9 @@ import csv
 import os
 import json
 import math
+import multiprocessing as mp
+mp.set_start_method("spawn", force=True)
+
 
 def sigmoid(x):
     return 1 / (1 + math.exp(-x))
@@ -715,4 +718,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
