@@ -18,7 +18,8 @@ import numpy as np
 import csv
 import os
 import json
-
+import multiprocessing as mp
+mp.set_start_method("spawn", force=True)
 
 
 def report_per_epoch(args, test_df, seed, model_configs):
