@@ -75,14 +75,8 @@ A typical config file (`configs/insightCrime.json`) might look like:
 
 ### Build the Docker Image
 
-**For CPU-only (Mac/PC without NVIDIA GPU):**
 ```bash
-docker build --build-arg DEVICE=cpu -t <Image Name> .
-```
-
-**For GPU (PC with NVIDIA GPU):**
-```bash
-docker build --build-arg DEVICE=gpu -t <Image Name> .
+docker build -t <Image Name> .
 ```
 
 Note that "Image Name" is whatever you wish to name the image. 
@@ -130,7 +124,7 @@ docker run --gpus all --rm -it \
 
 - **Run a different script:**
   ```bash
-  docker run --rm -it <Image Name> python3 run_mlm.py --your-args
+  docker run --rm -it <Image Name> python3 run_mlm.py
   ```
 - **Override config at runtime:**
   ```bash
@@ -154,12 +148,10 @@ docker run --gpus all --rm -it \
    ```
 2. **Tag your image:**
    ```bash
-   docker tag confli-bert-runner:cpu <your-dockerhub-username>/<Image Name>
    docker tag confli-bert-runner:gpu <your-dockerhub-username>/<Image Name>
    ```
 3. **Push your image:**
    ```bash
-   docker push <your-dockerhub-username>/<Image Name>
    docker push <your-dockerhub-username>/<Image Name>
    ```
 
