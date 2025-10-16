@@ -20,6 +20,7 @@ import os
 import json
 import multiprocessing as mp
 mp.set_start_method("spawn", force=True)
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 def report_per_epoch(args, test_df, seed, model_configs):
