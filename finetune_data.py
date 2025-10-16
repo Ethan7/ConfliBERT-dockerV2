@@ -10,7 +10,6 @@ import csv
 import os
 import json
 import multiprocessing as mp
-mp.set_start_method("spawn", force=True)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
@@ -697,4 +696,5 @@ def main():
 
 
 if __name__ == "__main__":
+    mp.set_start_method("spawn", force=True)
     main()
